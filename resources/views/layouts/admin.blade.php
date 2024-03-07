@@ -108,28 +108,26 @@
             </div>
         </nav>
 
-        <div class="container mt-4">
-
-
-                            <div class="row">
-                                <div class="col-lg-8 col-12 mx-auto">
-                                    <h1 class="text-white">@yield('content-header')</h1>
+        <div class="content-wrapper">
+            @extends('layouts.sidebar')
+                        <div class="content-wrapper">
                             <h4>@yield('content-header')</h4>
-
+                        </div>
                         <div class="main">
                             @yield('content-actions')
                         </div>
                     </div>
 
-        <main class="main" >
+        <main class="">
             @yield('content')
         </main>
     </div>
-    <footer class=" mt-4 bg-default" >
+    <footer class=" mt-2 bg-default content-wrapper" >
         <div class="container">
             <div class="row row-cols-1 row-cols-md-3">
                 <div class="col">
                   <div class="card shadow">
+
                     <div class="card-body">
                       <h5 class="card-title text-info"><b>FOLLOW US</b> </h5>
                       <ul class="list-group list-group-flush">

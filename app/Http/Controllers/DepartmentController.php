@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\DepartmentModel;
 use Illuminate\Http\Request;
+use App\Http\Requests\DepartmentRequest, DepartmentUpdateRequest;
 
 class DepartmentController extends Controller
 {
@@ -12,7 +13,15 @@ class DepartmentController extends Controller
      */
     public function index()
     {
-        return view('depart.index');
+        if (request()->wantsJson()) {
+            return response(
+                DepartmentModel::all()
+            );
+        }
+        $department = DepartmentModel::latest()->paginate(10);
+
+
+        return view('depart.index')->with('department', $department);
     }
 
     /**
@@ -20,15 +29,27 @@ class DepartmentController extends Controller
      */
     public function create()
     {
-        //
+        return view('depart.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(DepartmentRequest $request)
     {
-        //
+        $department = new DepartmentModel();
+        $department->name = $request->name;
+        $department->description = $request->description;
+        $department->fee = $request->fee;
+        $department->head = $request->head;
+        $department->save();
+
+        if ($department->save()) {
+            return redirect()->route('department.index')->with('success', 'Department created successfully');
+        }else{
+            return redirect()->route('department.create')->with('error', 'Error in creating department');
+        }
+        return redirect()->route('depart.index');
     }
 
     /**
@@ -42,17 +63,21 @@ class DepartmentController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(DepartmentModel $departmentModel)
+    public function edit(DepartmentModel $department)
     {
-        //
+
+        return view('depart.edit', compact('department'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, DepartmentModel $departmentModel)
+    public function update(DepartmentUpdateRequest $request, DepartmentModel $departmentModel)
     {
         //
+        $departmentModel->update($request->all());
+        return redirect()->route('depart.index')->with('success', 'Department updated successfully');
+
     }
 
     /**
@@ -61,5 +86,7 @@ class DepartmentController extends Controller
     public function destroy(DepartmentModel $departmentModel)
     {
         //
+        $departmentModel->delete();
+        return redirect()->route('depart.index')->with('success', 'Department deleted successfully');
     }
 }

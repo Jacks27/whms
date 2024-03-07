@@ -12,6 +12,14 @@
 
 // Bootstrap
 @import 'bootstrap/scss/bootstrap';
+.content-wrapper{
+    margin-left: 13%;
+    padding: 20px;
+    background-color: #dde6f0;
+    width: 87%;
+    float: right;
+
+}
 .admin-panel{
     display: flex;
     flex-direction: row;
@@ -39,15 +47,15 @@
     object-fit: contain;
     }
 .main-sidebar{
-    background-color: rgb(51, 53, 53);
-    color: rgb(12, 0, 0);
+    background-color: rgb(36, 61, 61);
+    color: rgb(70, 65, 65);
     height: 100vh;
     width: 13%;
     position: fixed;
     top: 5%;
     left: 0;
     overflow-x: hidden;
-    padding-top: 20px;
+    padding-top: 3px;
     margin-top: auto;
     margin-bottom: auto;
     z-index: 4;
@@ -57,32 +65,32 @@
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    padding-bottom: 20px;
-    padding-top: 20px;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-bottom: 3px;
+    padding-top: 3px;
+    padding-left: 3px;
+    padding-right: 3px;
     border-right: 1px solid white;
 }
 .main-sidebar a{
     padding: 1px;
     text-decoration: none;
-    color: white;
+    color: rgb(106, 117, 214);
     display: block;
     transition: 0.3s;
 }
 .main-sidebar a:hover{
-    background-color: white;
-    color: black;
+    background-color: rgb(107, 20, 20);
+    color: rgb(106, 117, 214);
 }
 .main-sidebar a.active{
-    background-color: white;
-    color: black;
+    background-color: rgb(107, 20, 20);
+    color: rgb(106, 117, 214);
 }
 .main-sidebar .logout{
     position: absolute;
     bottom: 0;
     width: 15%;
-    padding: 2px;
+    padding: 0.5px;
     text-decoration: none;
     color: white;
     display: block;

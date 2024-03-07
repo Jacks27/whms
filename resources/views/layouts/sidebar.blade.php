@@ -1,5 +1,5 @@
 <!-- Main Sidebar Container -->
-<aside class="main-sidebar sidebar-dark-primary elevation-4">
+<aside class="main-sidebar  elevation-4">
 
 <hr>
 
@@ -21,19 +21,19 @@
                 <li class="nav-item has-treeview">
                     <a href="{{route('home')}}" class="nav-link">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
-                        <p>Dashboard</p>
+                    <p class="text-small">Dashboard</p>
 
                 </li>
                 <li class="nav-item has-treeview">
-                    <a href="{{ route('department.index') }}" class="nav-link ">
+                    <a href="{{ route('department.index') }}" class="nav-link">
                         <i class="nav-icon fas fa-th-large"></i>
-                        <p>Department</p>
+                        <p class="text-small">Department</p>
                     </a>
                 </li>
                 <li class="nav-item has-treeview">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-user-md"></i>
-                        <p>Doctor</p>
+                        <p class="text-small">Doctor</p>
                     </a>
                 </
 
