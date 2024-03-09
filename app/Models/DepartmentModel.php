@@ -15,4 +15,8 @@ class DepartmentModel extends Model
         'head',
     ];
     protected $table = 'departments';
+
+    public static function getAll() {
+        return self::all();
+    }
 }

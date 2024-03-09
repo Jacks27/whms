@@ -28,6 +28,6 @@ Route::middleware('auth')->prefix('whms')->group(function () {
     Route::get('profile/create', [UserProfileController::class, 'create'])->name('profile.create');
     Route::resource('profile', UserProfileController::class)->except(['create']);
     Route::resource('department', DepartmentController::class);
-    Route::resource('doctor', DepartmentController::class);
+    Route::resource('doctor', DoctorController::class);
 
 });
