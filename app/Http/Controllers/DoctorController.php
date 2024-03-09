@@ -79,18 +79,33 @@ class DoctorController extends Controller
     }
     public function edit($id)
     {
-        return view('doc.edit');
+        $deprt = DepartmentModel::getAll();
+        $deprtmnt = $deprt->pluck('name', 'id');
+        $departments = $deprtmnt->all();
+        $doctor = Doctor::where('prof_id', $id)->first();
+        return view('doc.edit' )->with('departments', $departments)->with('doctor', $doctor);
     }
-    public function update(Request $request, $id)
+    public function update(Request $request,Doctor $doctor)
     {
         $request->validate([
-            'name' => 'required|string|max:255|unique:doctors,name,' . $id,
-            'department_id' => 'required|integer',
-            'email' => 'required|string|email|max:255|unique:doctors,email,' . $id,
-            'phone' => 'required|string|max:255',
-            'address' => 'required|string|max:255'
+            'prof_id' => 'required|integer',
+            'dep_id' => 'required|integer',
+            'speciality' => 'required|string|max:255',
+            'experience' => 'required|string|max:255',
+            'qualification' => 'required|string|max:255',
+            'status' => 'required|string|max:255',
         ]);
-        return redirect()->route('doctor.index');
+        $doctor->update(
+            [
+                'prof_id' => $request->prof_id,
+                'dep_id' => $request->dep_id,
+                'speciality' => $request->speciality,
+                'experience' => $request->experience,
+                'qualification' => $request->qualification,
+                'status' => $request->status,
+            ]
+        );
+        return redirect()->route('doctor.index')->with('success', 'Doctor updated successfully');
     }
     public function destroy($id)
     {

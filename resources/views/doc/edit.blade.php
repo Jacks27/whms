@@ -18,9 +18,9 @@
                 <label for="department_id">Department</label>
                 <select class="form-control  @error('dep_id') is-invalid @enderror"  id="department_id" name="dep_id">
                     <option value="">Select Department</option>
-                    @foreach($deprt as  $id => $name)
-                    <option value="{{$id}}">{{$name}}</option>
-                    @endforeach
+                    @foreach($departments as $id => $name)
+                    <option value="{{ $id }}">{{ $name }} </option>
+                @endforeach
                 </select>
                 @error('dep_id')
                 <span class="invalid-feedback" role="alert">
@@ -29,13 +29,7 @@
                 @enderror
             </div>
             <div class="form-group">
-                <label for="name">Doctor Name</label>
-            <select class="form-control  @error('prof_id') is-invalid @enderror"  id="name" name="prof_id">
-                <option value="">Select Doctor</option>
-                @foreach($docs as $doctor)
-                <option value="{{$doctor->id}}">{{$doctor->username}}</option>
-                @endforeach
-            </select>
+            <input type="text" class="form-control" hidden="true" value="{{$doctor->prof_id}}" @error('prof_id') is-invalid @enderror  id="name" name="prof_id">
             @error('prof_id')
             <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
@@ -45,7 +39,7 @@
             </div>
             <div class="form-group" >
                 <label for="description">Doctor Description</label>
-                <textarea class="form-control  @error('speciality') is-invalid @enderror"" id="speciality" name="speciality" rows="3"></textarea>
+                <textarea class="form-control  @error('speciality') is-invalid @enderror"" id="speciality" name="speciality" rows="3">{{$doctor->speciality}}</textarea>
                 @error('speciality')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
@@ -53,7 +47,7 @@
                 @enderror
             </div>
             <div class="form-group">
-                <input type="head" class="form-control @error('qualification') is-invalid @enderror" id="qualification" name="qualification" placeholder="Enter Doctor Qualification">
+                <input type="head" class="form-control @error('qualification') is-invalid @enderror" value="{{$doctor->qualification}}" id="qualification" name="qualification" placeholder="Enter Doctor Qualification">
                 @error('qualification')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
@@ -62,8 +56,17 @@
             </div>
             <div class="form-group">
                 <label for="speciality">Speciality</label>
-                <input type="text" class="form-control @error('speciality') is-invalid @enderror" id="speciality" name="speciality" placeholder="speciality">
+                <input type="text" class="form-control" value='{{$doctor->speciality}}' @error('speciality') is-invalid @enderror" id="speciality" name="speciality" placeholder="speciality">
                 @error('speciality')
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+                @enderror
+            </div>
+            <div class="form-group">
+                <label for="status">Experience</label>
+                <input type="number" class="form-control @error('experience') is-invalid @enderror" value='{{$doctor->experience}}' id="experience" name="experience" placeholder="Enter Doctor Experience">
+                @error('experience')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
                 </span>

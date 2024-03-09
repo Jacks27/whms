@@ -29,12 +29,11 @@
                 <td>{{$doc->department}}</td>
                 <td>{{$doc->status}}</td>
                 <td>
-                    <a href="{{route('doctor.edit', $doc->id)}}" class="btn btn-primary">Edit</a>
-                    <a href="{{route('doctor.show', $doc->id)}}" class="btn btn-primary">Show</a>
+                    <a href="{{route('doctor.edit', $doc->id)}}" class="btn btn-primary"><i class="fa-solid fa-pen"></i></a>
                     <form action="{{route('doctor.destroy', $doc->id)}}" method="POST">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-danger">Delete</button>
+                        <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash"></i></button>
                     </form>
                 </td>
             </tr>
