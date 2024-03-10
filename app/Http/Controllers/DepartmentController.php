@@ -67,10 +67,14 @@ class DepartmentController extends Controller
         })->with('users')->get();
         $department = DepartmentModel::find($id);
 
-
+        if (request()->wantsJson()) {
+            return response(
+                $doctors
+            );
+        }
         // This code retrieves all doctors associated with the given department ID ($departmentModel->id) and eager loads the users relationship for each doctor
 
-        return view('depart.show', compact('department', 'doctors'));
+        return view('depart.show')->with('doctors', $doctors)->with('department', $department);
     }
 
     /**

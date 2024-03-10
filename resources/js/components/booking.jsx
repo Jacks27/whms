@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import axios from "axios";
 
@@ -6,13 +6,14 @@ class Booking extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            date: new Date(),
+            date: new Date().toISOString().slice(0, 10),
             patient_id:'',
             doctor_id:'',
-            time:'',
+            time: new Date().toISOString().slice(11, 16),
             payment_mode:'',
             errors: {},
             data: [],
+            docdata: [],
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -20,23 +21,46 @@ class Booking extends React.Component {
     }
 
     componentDidMount() {
-        axios.get("whms/department").then(response => {
-            this.setState({
-                data: response.data
-            });
-        });
+       this.fetchData();
     }
 
-    loadDct(e) {
-        const dept_id = e.target.value;
-        axios.get("whms/department/"+dept_id).then(response => {
-            this.setState({
-                docdata: response.data
-            });
-        });
+    fetchData = async () => {
+        try {
+            const response = await axios.get('/whms/department');
+            this.setState({ data: response.data });
+
+        } catch (error) {
+            this.setState({ error: 'An error occurred while fetching data.' });
+        }
     }
+
+
+loadDct(e) {
+    console.log('item clicked');
+    const dept_id = e.target.value;
+
+}
+loadChange = () => {
+    var selectBox = document.getElementById("department");
+    var selectedValue = selectBox.value;
+    this.setState({ docdata: [] });
+    document.getElementById("doctor").value = "";
+
+
+    axios.get(`/whms/department/${selectedValue}`)
+        .then(response => {
+        this.setState({ docdata: response.data });
+        console.log(response.data);
+
+        })
+        .catch(error => {
+            console.error('Error fetching department data:', error);
+        });
+};
+
 
     render(){
+        // this.state = {patient_id:'', doctor_id:'', time: new Date().toISOString().slice(11, 16), payment_mode:'', errors: {}};
         return (
             <div>
                 <form onSubmit={this.handleSubmit}>
@@ -47,7 +71,7 @@ class Booking extends React.Component {
                             id="department"
                             name="department"
                             value={this.state.department}
-                            onChange={this.handleChange} >
+                            onChange={this.loadChange} >
                             <option value="">Select Department</option>
                             {this.state.data.map(elmen => {
                                 return <option key={elmen.id} onClick={this.loadDct} value={elmen.id}>{elmen.name}</option>;
@@ -64,13 +88,54 @@ class Booking extends React.Component {
                             value={this.state.doctor}
                             onChange={this.handleChange} >
                             <option value="">Select Doctor</option>
-                            {this.state.docdata && this.state.docdata.map(elmen => {
-                                return <option key={elmen.id} value={elmen.id}>{elmen.name}</option>;
-                            })}
+{this.state.docdata && this.state.docdata.map(element => (
+    <option key={element.id} value={element.id}> {element.users[0]?.username}</option>
+))}
                             </select>
                     </div>
-                    {/* the doctor options will be filled from the loaddoctors function  */}
-                    {/* ... rest of the form fields ... */}
+                    <div className="form-group">
+                        <label htmlFor="date">Date</label>
+                        <input
+                        type="date"
+                        className="form-control"
+                        id="date"
+                        name="date"
+                        min={new Date().toISOString().slice(0, 10)}
+                        value={this.state.date}
+                        onChange={this.handleChange}
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="time">Time</label>
+                        <input
+                            type="time"
+                            className="form-control"
+                            id="time"
+                            name="time"
+                            format='HH:mm'
+                            min="09:00"
+                            max="18:00"
+                            value={this.state.time}
+                            onChange={this.handleChange}
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="payment_mode">Payment Mode</label>
+                        <select
+                            className="form-control"
+                            id="payment_mode"
+                            name="payment_mode"
+                            value={this.state.payment_mode}
+                            onChange={this.handleChange} >
+                            <option value="">Select Payment Mode</option>
+                            <option value="Cash">Cash</option>
+                            <option value="Mpesa">Mpesa</option>
+                        </select>
+                    </div>
+                    <button type="submit" className="btn btn-primary">
+                        Book
+                    </button>
                 </form>
             </div>
         );
