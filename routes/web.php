@@ -5,6 +5,7 @@ use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DoctorController;
+use App\Http\Controllers\AppointmentController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -29,5 +30,7 @@ Route::middleware('auth')->prefix('whms')->group(function () {
     Route::resource('profile', UserProfileController::class)->except(['create']);
     Route::resource('department', DepartmentController::class);
     Route::resource('doctor', DoctorController::class);
+    Route::resource('booking', AppointmentController::class);
+
 
 });
