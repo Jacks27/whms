@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\DepartmentModel;
+use App\Models\Doctor;
+use App\Models\Users;
 use Illuminate\Http\Request;
 use App\Http\Requests\DepartmentRequest, DepartmentUpdateRequest;
+use Illuminate\Support\Facades\DB;
 
 class DepartmentController extends Controller
 {
@@ -55,9 +58,19 @@ class DepartmentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(DepartmentModel $departmentModel)
+    public function show($id)
     {
-        //
+        // get doctor by department
+
+        $doctors = Doctor::whereHas('department', function ($query) use ($id) {
+            $query->where('id', $id);
+        })->with('users')->get();
+        $department = DepartmentModel::find($id);
+
+
+        // This code retrieves all doctors associated with the given department ID ($departmentModel->id) and eager loads the users relationship for each doctor
+
+        return view('depart.show', compact('department', 'doctors'));
     }
 
     /**

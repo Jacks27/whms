@@ -13,6 +13,19 @@ return new class extends Migration
     {
         Schema::create('appointments', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('patient_id');
+            $table->foreignId('doctor_id');
+            $table->dateTime('date');
+            $table->boolean('status')->default(0);
+            $table->text('description');
+            $table->string('prescription');
+            $table->string('report');
+            $table->string('payment');
+            $table->string('payment_status');
+            $table->string('payment_mode');
+            $table->timestamp('time');
+            $table->foreign('patient_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('doctor_id')->references('id')->on('doctors')->onDelete('cascade');
             $table->timestamps();
         });
     }

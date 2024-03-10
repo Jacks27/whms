@@ -30,6 +30,7 @@
                                         <td>{{ $data->description }}</td>
                                         <td>
                                             <a href="{{ route('department.edit', $data->id) }}" class="btn btn-primary"><i class="fa-solid fa-pen"></i></a>
+                                            <a href="{{ route('department.show', $data->id) }}" class="btn btn-info"><i class="fa-solid fa-eye"></i></a>
                                             <a href="{{ route('department.destroy', $data->id) }}" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
                                         </td>
                                     </tr>
