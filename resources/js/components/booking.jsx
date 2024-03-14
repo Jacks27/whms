@@ -9,6 +9,7 @@ class Booking extends Component {
             date: new Date().toISOString().slice(0, 10),
             patient_id: '',
             doctor_id: '',
+            message: '',
             time: new Date().toISOString().slice(11, 16),
             payment_mode: '',
             errors: {},
@@ -49,17 +50,18 @@ class Booking extends Component {
         e.preventDefault();
         const booking = {
             date: this.state.date,
-            patient_id: this.state.patient_id,
             doctor_id: this.state.doctor_id,
-            time: this.state.time,
+            time: `${this.state.date} ${this.state.time}:00`,
+            description: this.state.message,
             payment_mode: this.state.payment_mode
         };
+        console.log(booking);
 
         const formData = new FormData();
         for (const key in booking) {
             formData.append(key, booking[key]);
         }
-
+        console.log(formData.getAll('doctor_id'))
         axios.post("/whms/booking", formData)
             .then(response => {
                 console.log(response);
@@ -92,7 +94,7 @@ class Booking extends Component {
                         <select
                             className="form-control"
                             id="doctor"
-                            name="doctor"
+                            name="doctor_id"
                             value={this.state.doctor}
                             onChange={this.handleChange}>
                             <option value="">Select Doctor</option>
@@ -128,6 +130,18 @@ class Booking extends Component {
                             required
                         />
                     </div>
+                    <div className="form-group">
+                        <label htmlFor="message">Message</label>
+                        <textarea
+                            className="form-control"
+                            id="message"
+                            name="message"
+                            value={this.state.message}
+                            onChange={this.handleChange}
+                            required
+                        />
+                    </div>
+
                     <div className="form-group">
                         <label htmlFor="payment_mode">Payment Mode</label>
                         <select
