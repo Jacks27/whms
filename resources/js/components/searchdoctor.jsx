@@ -4,7 +4,7 @@ import './css/utilspage.css';
 
 
 
-class DoctorSearchInput extends React.Component{
+class AppntSearchInput extends React.Component{
     constructor(props) {
       super(props);
       this.state = {
@@ -16,8 +16,8 @@ class DoctorSearchInput extends React.Component{
       };
     }
 
-    sendDataToParent(id, name){
-        this.props.SearchInputCb(id)
+    sendDataToParent(id){
+        this.props.SearchInputCb([id])
         this.setState({visibleList:false, searchTerm: name});
 
     }
@@ -29,8 +29,8 @@ class DoctorSearchInput extends React.Component{
 
 
       try {
-        const response = await axios.get(`/admin/supplier?search=${searchTerm}`);
-        this.setState({ data: response.data['data'] });
+        const response = await axios.get(`/whms/schedule?search=${searchTerm}`);
+        this.setState({ data: response.data });console.log(response);
 
       } catch (error) {
         this.setState({ error: 'An error occurred while fetching data.' });
@@ -42,16 +42,16 @@ class DoctorSearchInput extends React.Component{
     render() {
       const { searchTerm, data, error, visibleList} = this.state;
       return (
-
         <div className="search-containe">
 
-          <label>Supplier Name:</label>
+          <label>Appointment</label>
           <input
           id="search_txt"
-            type="text"
+            type="number"
             value={searchTerm}
             onChange={this.handleSearchChange}
             className="form-control"
+            placeholder='Search for appointment by ID '
           />
           < ul className='results-list'>
           {error ? (
@@ -59,8 +59,8 @@ class DoctorSearchInput extends React.Component{
           ) : ( visibleList &&
            data.map(
             supp=><li style={{ zIndex: 3 }} className='dropdown-item' key={supp.id}>
-            <button onClick={() => this.sendDataToParent(supp.id, supp.name)} className="dropdown-item" type="button">
-              {supp.name}
+            <button onClick={() => this.sendDataToParent(supp)} className="dropdown-item" type="button">
+            {supp.username} <i class="fa-light fa-id-card"></i> {supp.id}
             </button>
           </li>
            )
@@ -71,4 +71,4 @@ class DoctorSearchInput extends React.Component{
     }
   }
 
-  export default SupplierSearchInput;
+  export default AppntSearchInput;

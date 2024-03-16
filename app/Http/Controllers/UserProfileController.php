@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UserProfileRequest;
 use Illuminate\Http\Request;
 use App\Models\UserProfile;
+use App\Models\appointment;
 use Illuminate\Support\Facades\DB;
 
 
@@ -27,8 +28,9 @@ class UserProfileController extends Controller
                 'users.email',
                 'users.created_at'
             )->where('users.id', $request->user()->id)->get(); // Assuming user_id is the foreign key linking to
+            $userAppointments = appointment::where('doctor_id', $request->user()->id)->get();
+            return view('home')->with('userprofile', $userprofile)->with('userAppointments', $userAppointments);
 
-            return view('home')->with('userprofile', $userprofile);
     }
     public function update(Request $request)
     {

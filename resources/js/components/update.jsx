@@ -34,12 +34,9 @@ class Booking extends Component {
                 // Fetch the data for the record being updated
                 const id = window.location.pathname.split('/').pop();
                 const response = await axios.get(`/whms/booking/${id}/edit`);
-                const { date, doctor_id, time, description, payment_mode } = response.data[0];
-                this.setState({ doctor_id: response.data.doctor_id,
-                                message: response.data.description, payment_mode: response.data.payment_mode });
-
-                console.log(this.state.message);
-                this.setState({ doctor_id,message: description, payment_mode });
+                console.log(response);
+                const { date, doctor_id, time, description, payment_mode } = response.data;
+                this.setState({ date, doctor_id, time, message: description, payment_mode });
 
             }
 
@@ -77,7 +74,6 @@ class Booking extends Component {
         };
 
         const formData = new FormData();
-
         for (const key in booking) {
             formData.append(key, booking[key]);
         }
@@ -89,7 +85,7 @@ class Booking extends Component {
                     console.log(response);
                 })
                 .catch(error => {
-                    this.state.errors=error
+                    console.log(error);
                 });
         } else {
             // If not updating, send a POST request
@@ -114,10 +110,8 @@ class Booking extends Component {
     }
 
     render() {
-
         return (
             <div>
-            <div> {this.state.errors.message}</div>
                 <form onSubmit={this.handleSubmit}>
                 <div className="form-group">
                         <label htmlFor="date">Appoint </label>
@@ -146,7 +140,6 @@ class Booking extends Component {
                                 <option key={element.id} value={element.id}>{element.users[0]?.username}</option>
                             ))}
                         </select>
-
                     </div>
                     <div className="form-group">
                         <label htmlFor="date">Date</label>

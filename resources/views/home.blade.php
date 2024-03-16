@@ -40,36 +40,28 @@
                 </div>
                 <input type="text" name="search" id="search" class=" search-input form-control shadow" placeholder="Search">
                 <div class="row">
-                    <div class="col-md-4">
-                        <div class="card shadow">
-                            <div class="card-header">
-                                <h6>Appointments</h6>
-                            </div>
-                            <div class="card-body">
-                                <h1>20</h1>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card shadow">
-                            <div class="card-header">
-                                <h6>Patients</h6>
-                            </div>
-                            <div class="card-body">
-                                <h1>20</h1>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card shadow">
-                            <div class="card-header">
-                                <h6>My Doctor</h6>
-                            </div>
-                            <div class="card-body">
-                                <h1>20</h1>
-                            </div>
-                        </div>
-                    </div>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                            <td>SL</td>
+                            <td>Date</td>
+                            <td>Description</td>
+                            <td>Action</td>
+                            </tr>
+                        </thead>
+
+                            @foreach ($userAppointments as $appointment)
+                            <tr>
+                                <td>{{ $loop->index + 1 }}</td>
+                                <td>{{ $appointment->date }}</td>
+                                <td>{{ $appointment->description }}</td>
+                                <td><a href="{{ route('booking.edit', $appointment->id) }}">Edit</a></td>
+                            </tr>
+                        @endforeach
+
+                    </table>
+
+
                 </div>
                 @empty($userprofile)
                 <div class="card shadow">

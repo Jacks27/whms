@@ -6,6 +6,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\AppointmentController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -31,6 +33,6 @@ Route::middleware('auth')->prefix('whms')->group(function () {
     Route::resource('department', DepartmentController::class);
     Route::resource('doctor', DoctorController::class);
     Route::resource('booking', AppointmentController::class);
-
-
+    Route::resource('schedule', ScheduleController::class);
+    Route::get('schedule/search', [AppointmentController::class, 'serch'])->name('search');
 });

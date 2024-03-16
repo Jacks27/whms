@@ -9,19 +9,17 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 class appointment extends Model
 {
     use HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
     protected $table = 'appointments';
     protected $fillable = [
         'patient_id',
         'doctor_id',
         'date',
+        'time',
         'status',
         'payment_mode',
-        'description',
-        'prescription',
         'report',
-        'payment',
-        'time',
+        'description',
+        'confirmation',
         'payment_status'
     ];
     public function doctor():HasManyThrough

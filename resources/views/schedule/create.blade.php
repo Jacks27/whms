@@ -10,7 +10,7 @@
     <div class="card-header text-center mt-2">
         <h4>Book An Appointment </h4>
     </div>
-<div id='bk_appnmt' class="mt-2">
+<div id='schedule_app' class="mt-2">
                 </div>
             </div>
         </div>
