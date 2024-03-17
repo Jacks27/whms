@@ -151,7 +151,6 @@ class AppointmentController extends Controller
         // }
         if($request->wantsJson()){
             return response($appointment);
-
         }
         return view('booking.edit', compact('appointment'));
     }

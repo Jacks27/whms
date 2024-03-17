@@ -35,7 +35,8 @@ class Booking extends Component {
                 const id = window.location.pathname.split('/').pop();
                 const response = await axios.get(`/whms/booking/${id}/edit`);
                 const { date, doctor_id, time, description, payment_mode } = response.data[0];
-                this.setState({ doctor_id: response.data.doctor_id,
+
+                this.setState({ updateId: response.data.id, doctor_id: response.data.doctor_id,
                                 message: response.data.description, payment_mode: response.data.payment_mode });
 
                 console.log(this.state.message);
@@ -66,7 +67,7 @@ class Booking extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-        const { isUpdating, updateId } = this.state;
+        const { isUpdating } = this.state;
 
         const booking = {
             date: this.state.date,
@@ -84,12 +85,16 @@ class Booking extends Component {
 
         if (isUpdating) {
             // If updating, send a PUT request instead of POST
-            axios.put(`/whms/booking/${updateId}`, formData)
+            const id = window.location.pathname.split('/')[3]
+
+            axios.put(`/whms/booking/${id}`, formData)
                 .then(response => {
                     console.log(response);
                 })
                 .catch(error => {
                     this.state.errors=error
+                    console.log(error.response.data);
+                    this.setState({ errors: error.response.data });
                 });
         } else {
             // If not updating, send a POST request
@@ -117,7 +122,7 @@ class Booking extends Component {
 
         return (
             <div>
-            <div> {this.state.errors.message}</div>
+            <div className='text-danger'> {this.state.errors.message} {this.state.errors.errors?.doctor_id}</div>
                 <form onSubmit={this.handleSubmit}>
                 <div className="form-group">
                         <label htmlFor="date">Appoint </label>
@@ -125,6 +130,7 @@ class Booking extends Component {
                             className="form-control"
                             id="department"
                             name="department"
+                            c
                             value={this.state.department}
                             onChange={(e) => this.loadChange(e.target.value)}>
                             <option value="">Select Department</option>
@@ -136,7 +142,7 @@ class Booking extends Component {
                     <div className="form-group">
                         <label htmlFor="Doctor">Doctor</label>
                         <select
-                            className="form-control"
+                            className='form-control {{ this.state.errors.erros->has("doctor_id") ? " is-invalid" : ""}}'
                             id="doctor"
                             name="doctor_id"
                             value={this.state.doctor}
@@ -146,6 +152,7 @@ class Booking extends Component {
                                 <option key={element.id} value={element.id}>{element.users[0]?.username}</option>
                             ))}
                         </select>
+                        <div className='text-danger'><strong> {this.state.errors.errors?.doctor_id}</strong> </div>
 
                     </div>
                     <div className="form-group">
@@ -160,6 +167,8 @@ class Booking extends Component {
                             onChange={this.handleChange}
                         />
                     </div>
+                   <div className='text-danger'><strong> {this.state.errors.errors?.date}</strong> </div>
+
                     <div className="form-group">
                         <label htmlFor="time">Time</label>
                         <input
@@ -175,6 +184,8 @@ class Booking extends Component {
                             required
                         />
                     </div>
+                    <div className='text-danger'><strong> {this.state.errors.errors?.time}</strong> </div>
+
                     <div className="form-group">
                         <label htmlFor="message">Message</label>
                         <textarea
@@ -186,6 +197,7 @@ class Booking extends Component {
                             required
                         />
                     </div>
+                    <div className='text-danger'><strong> {this.state.errors.errors?.description}</strong> </div>
 
                     <div className="form-group">
                         <label htmlFor="payment_mode">Payment Mode</label>
@@ -200,6 +212,8 @@ class Booking extends Component {
                             <option value="Mpesa">Mpesa</option>
                         </select>
                     </div>
+                    <div className='text-danger'><strong> {this.state.errors.errors?.payment_mode}</strong> </div>
+
                     <button type="submit" className="btn btn-primary">
                         {this.state.isUpdating ? 'Update' : 'Book'} {/* Change button text based on mode */}
                     </button>
