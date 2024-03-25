@@ -48,6 +48,7 @@
                 <th>Qualification</th>
                 <th>Specialist</th>
                 <th>Exprience</th>
+                <th>Roles</th>
             </tr>
         </thead>
         @foreach ($doctors as $data)

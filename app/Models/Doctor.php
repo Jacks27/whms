@@ -5,11 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\DepartmentModel;
+use App\Models\UserProfile;
 use APP\Models\User;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\hasOne;
+use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 
 class Doctor extends Model
 {
+    use Notifiable;
+    use HasRoles;
     use HasFactory;
     protected $fillable = [
         'prof_id',
@@ -20,6 +25,7 @@ class Doctor extends Model
         'status',
     ];
     protected $table = 'doctors';
+
     public function department()
     {
         return $this->belongsTo(DepartmentModel::class, 'dep_id');
@@ -29,26 +35,13 @@ class Doctor extends Model
         return $this->belongsTo(UserProfile::class, 'prof_id');
     }
 
-    // user relationship id
-
-    //profile user_id
-    // department_id
-    // department id
 
 
-
-public function users(): HasManyThrough
-{
-    return $this->hasManyThrough(User::class, UserProfile::class, 'user_id', 'id', 'id', 'user_id')
-    ->select(
-        'users.id',
-        'users.name as username',
-        'user_profiles.id',
-        'user_profiles.phno'
-    );
-
-
-}
+    public function users()
+    {
+        return $this->hasOne(User::class, 'user_id', 'id')
+            ->select('user.id', 'user.name as username', 'user_profiles.id as profile_id', 'user_profiles.phno');
+    }
 
 
     public function appointment()

@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 @extends('layouts.sidebar')
 @section('title', 'Department ')
-@section('content-header', 'Department Create')
+@section('content-header', 'Department Update')
 @section('content-actions')
 <a href="{{route('department.index')}}" class="btn btn-primary">Home</a>
 @endsection
@@ -9,6 +9,7 @@
 <div class='card m-auto col-sm-12 col-lg-6 shadow p-2'>
     <div class="card-header text-center mt-2">
         <h4>Department Update </h4>
+
     </div>
     <form action="{{route('department.update', $department->id)}}" method="POST">
         @csrf
@@ -52,4 +53,3 @@
     </form>
 </div>
 @endsection
-# The code above is the update.blade.php file from the WHMS project. This file is a view file that is used

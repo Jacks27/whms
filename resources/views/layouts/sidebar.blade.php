@@ -26,12 +26,12 @@
                 </li>
                 <li class="nav-item has-treeview">
                     <a href="{{ route('department.index') }}" class="nav-link">
-                        <i class="nav-icon fas fa-th-large"></i>
+                        <i class="fa-solid fa-building"></i>
                         <p class="text-small">Department</p>
                     </a>
                 </li>
                 <li class="nav-item has-treeview">
-                    <a href="#" class="nav-link">
+                    <a href="{{route('doctor.index')}}" class="nav-link">
                         <i class="nav-icon fas fa-user-md"></i>
                         <p class="text-small">Doctor</p>
                     </a>

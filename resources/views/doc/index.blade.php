@@ -22,15 +22,18 @@
         <tbody>
             @foreach($docs as $doc)
             <tr>
-                <td>{{$doc->id}}</td>
+                <td>{{$loop->index +1}}</td>
                 <td>{{$doc->username}}</td>
                 <td>{{$doc->speciality}}</td>
                 <td>{{$doc->qualification}}</td>
                 <td>{{$doc->department}}</td>
                 <td>{{$doc->status}}</td>
                 <td>
-                    <a href="{{route('doctor.edit', $doc->id)}}" class="btn btn-primary"><i class="fa-solid fa-pen"></i></a>
-                    <form action="{{route('doctor.destroy', $doc->id)}}" method="POST">
+                    <a href="{{route('doctor.edit', $doc->docid)}}" class="btn btn-primary"><i class="fa-solid fa-pen"></i></a>
+                    <a href="{{route('doctor.edit', $doc->docid)}}" class="btn btn-primary"><i class="fa-solid fa-list-check"></i></a>
+                    <a href="{{route('doctor.show', $doc->user_id)}}" class="btn btn-primary"><i class="fa-regular fa-eye"></i></a>
+
+                    <form action="{{route('doctor.destroy', $doc->docid)}}" method="POST">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash"></i></button>

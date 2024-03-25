@@ -89,6 +89,17 @@
             </span>
             @enderror
         </div>
+        <div class="form-group">
+            <label for="rights">Rights</label>
+            <select name="role" class="form-control">
+                <option value="">Assign a Role</option>
+                @foreach($roles as $role)
+                    <option value="{{ $role->name }}">{{ $role->name }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 </div>

@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\DepartmentModel;
 use App\Models\Doctor;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
-
+use Spatie\Permission\Models\Role;
 class DoctorController extends Controller
 {
     public function index()
@@ -21,13 +22,14 @@ class DoctorController extends Controller
             'qualification',
             'status',
             'departments.name as department',
-            'doctors.id',
-            'user_profiles.id as user_id',
+            'doctors.id as docid',
+            'user_profiles.id as profile_id',
             'user_profiles.phno',
             'user_profiles.address',
             'user_profiles.image',
             'user_profiles.county',
             'user_profiles.city',
+            'users.id as user_id',
             'users.name as username'
         )->get();
 
@@ -41,12 +43,14 @@ class DoctorController extends Controller
         ->select(
             'user_profiles.id',
             'users.name as username',
+            'users.id as profileid'
         )->get();
         $department = DepartmentModel::getAll();
         $deprtmnt = $department->pluck('name', 'id');
         $deprt = $deprtmnt->all();
+        $rolenames = Role::all();
 
-        return view('doc.create')->with('docs', $docs)->with('deprt', $deprt);
+        return view('doc.create')->with('docs', $docs)->with('deprt', $deprt)->with('roles',$rolenames);
     }
     public function store(Request $request)
     {
@@ -66,6 +70,8 @@ class DoctorController extends Controller
             'qualification' => $request->qualification,
             'status' => $request->status,
         ]);
+
+
         if ($pro->save()) {
             return redirect()->route('doctor.index')->with('success', 'Doctor created successfully');
         }else{
@@ -75,16 +81,25 @@ class DoctorController extends Controller
     }
     public function show($id)
     {
-        return view('doctor.show');
+        $doc = User::select('id', 'name', 'email')
+            ->where('id', $id)
+            ->first();
+            $roles=$doc->getRoleNames();
+            $rolenames = Role::all()->pluck('name');
+        return view('doc.show', compact('doc', 'roles', 'rolenames'));
     }
     public function edit($id)
     {
+
         $deprt = DepartmentModel::getAll();
         $deprtmnt = $deprt->pluck('name', 'id');
         $departments = $deprtmnt->all();
-        $doctor = Doctor::where('prof_id', $id)->first();
+        $doctor = Doctor::where('id', $id)->first();
+
+
         return view('doc.edit' )->with('departments', $departments)->with('doctor', $doctor);
     }
+
     public function update(Request $request,Doctor $doctor)
     {
         $request->validate([
@@ -107,9 +122,11 @@ class DoctorController extends Controller
         );
         return redirect()->route('doctor.index')->with('success', 'Doctor updated successfully');
     }
-    public function destroy($id)
+    public function destroy(Doctor $doctor)
     {
-        return redirect()->route('doctor.index');
+        $doctor->delete();
+        return redirect()->route('doctor.index')->with('success', 'Profile  deleted successfully');
+
     }
 
 

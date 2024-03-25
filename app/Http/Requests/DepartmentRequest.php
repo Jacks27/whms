@@ -26,7 +26,6 @@ class DepartmentRequest extends FormRequest
             'description' => ['required', 'string', 'max:255'],
             'fee' => ['required', 'string', 'max:255'],
             'head' => ['required', 'string', 'max:255'],
-
         ];
     }
 }

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\UserProfile;
 use App\Models\appointment;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\rolerequest;
 
 
 class UserProfileController extends Controller
@@ -28,10 +29,13 @@ class UserProfileController extends Controller
                 'users.email',
                 'users.created_at'
             )->where('users.id', $request->user()->id)->get(); // Assuming user_id is the foreign key linking to
-            $userAppointments = appointment::where('doctor_id', $request->user()->id)->get();
+            $userAppointments = appointment::where('patient_id', $request->user()->id)->get();
+
+
             return view('home')->with('userprofile', $userprofile)->with('userAppointments', $userAppointments);
 
     }
+
     public function update(Request $request)
     {
         $user = auth()->user();

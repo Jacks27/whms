@@ -6,8 +6,10 @@ use App\Models\DepartmentModel;
 use App\Models\Doctor;
 use App\Models\Users;
 use Illuminate\Http\Request;
-use App\Http\Requests\DepartmentRequest, DepartmentUpdateRequest;
+use App\Http\Requests\DepartmentRequest;
+use App\Http\Requests\DepartmentUpdateRequest;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 
 class DepartmentController extends Controller
 {
@@ -52,7 +54,7 @@ class DepartmentController extends Controller
         }else{
             return redirect()->route('department.create')->with('error', 'Error in creating department');
         }
-        return redirect()->route('depart.index');
+        return redirect()->route('departany.index');
     }
 
     /**
@@ -64,17 +66,20 @@ class DepartmentController extends Controller
 
         $doctors = Doctor::whereHas('department', function ($query) use ($id) {
             $query->where('id', $id);
+
         })->with('users')->get();
+        dd($doctors);
         $department = DepartmentModel::find($id);
+        $rolenames = Role::all()->pluck('name');
 
         if (request()->wantsJson()) {
             return response(
-                $doctors
+                $doctors,
             );
         }
         // This code retrieves all doctors associated with the given department ID ($departmentModel->id) and eager loads the users relationship for each doctor
 
-        return view('depart.show')->with('doctors', $doctors)->with('department', $department);
+        return view('depart.show')->with('doctors', $doctors)->with('department', $department)->with('roles', $rolenames);
     }
 
     /**
@@ -89,12 +94,19 @@ class DepartmentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(DepartmentUpdateRequest $request, DepartmentModel $departmentModel)
+    public function update(DepartmentUpdateRequest $request,$id)
     {
-        //
-        $departmentModel->update($request->all());
-        return redirect()->route('depart.index')->with('success', 'Department updated successfully');
-
+        $updt= DepartmentModel::where('id', $id)->update([
+            'name' => $request->name,
+            'description' => $request->description,
+            'fee' => $request->fee,
+            'head' => $request->head
+        ]);
+        if ($updt) {
+            return redirect()->route('department.index')->with('success', 'Department updated successfully');
+        } else {
+            return redirect()->back()->with('error', 'Error in updating department');
+        }
     }
 
     /**
