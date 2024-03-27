@@ -26,15 +26,37 @@
                 <td>{{$doc->name}}</td>
                 <td>{{$doc->email}}</td>
                 <td>
-                    @isset($roles)
-                    @foreach ($roles as $role)
-                        {{$role}}
-                    @endforeach
-                        @else
-                     no permission set
-                     @endisset
-                </td>
-                <td>
+                    <form method="POST" action="{{route('profile.roleRevoke')}}" id='revoke-roles'>
+                        @csrf()
+                        <input type="hidden" name="id" value="{{$doc->id}}">
+                        <ul>
+                        @forelse ($roles as $role)
+                        <li class="">
+                            {{$role}}
+                            <span class="badge  rounded-pill">
+                                <input  value={{$role}} type="checkbox" class="@error('roles') is-invalid @enderror" name="role[]" id="flexRadioDefault1">
+                            </span>
+                        </li>
+
+                        @empty
+                        No roles assigned
+                        @endforelse
+                        </ul>
+                    </td>
+
+                    <td>
+
+
+                            </ul>
+                        <button type="submit" @if(!$roles->isNotEmpty()) disabled @endif class="btn btn-sm btn-info btn-delete">Revoke</button>
+
+                        </form>
+
+
+
+
+
+
 
                     <a href="{{route('doctor.edit', $doc->id)}}" class="btn btn-primary"><i class="fa-solid fa-list-check"></i></a>
                     <form action="{{route('doctor.destroy', $doc->id)}}" method="POST">
@@ -50,20 +72,19 @@
 <div class="col-sm-12 col-lg-6 ">
 
     <div class="col-sm-12 col-lg-12 m-auto card">
-    <form action="/whms/assign-role" method="POST">
+    <form method="POST" action="{{route('profile.roleAssign')}}" enctype="multipart/form-data"  >
         @csrf
-
         <div class="form-group">
         <label for='pms'>Roles</label>
-        <input type="hidden" value="{{$doc->id}}" name='id'/>
+        <input type="hidden" value="{{$doc->id}}" name='id'>
         <select class="form-control" name="role" id='pms'>
             <option  value="">Select Role</option>
             @foreach($rolenames as $role)
-            <option value="{{$role}}">{{$role}}</option>
+            <option value={{$role}}>{{$role}}</option>
             @endforeach
         </select>
         </div>
-        <input type="submit" class="from-control" id="addrole">
+        <input type="submit" class="from-control" value="submit"/>
     </form>
 </div>
 </div>

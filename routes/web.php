@@ -8,6 +8,8 @@ use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\PermissionsController;
 // Welcome Route
 
 Route::view('/', 'welcome');
@@ -26,8 +28,11 @@ Route::middleware('auth')->prefix('whms')->group(function () {
     Route::resource('doctor', DoctorController::class);
     Route::resource('booking', AppointmentController::class);
     Route::resource('schedule', ScheduleController::class);
+    Route::resource('/role', RoleController::class);
+    Route::resource('/permissions', PermissionsController::class);
+    Route::resource('/users', RegisterController::class);
     Route::get('schedule/search', [AppointmentController::class, 'search'])->name('search');
-    Route::resource('/user', RegisterController::class);
-    Route::post('/assign-role', [RegisterController::class,'assignRole'])->name('user.assignRole');
-    Route::post('/user/revoke-role', [RegisterController::class,'revokeRole'])->name('user.revokeRole');
+    Route::post('profile/assign', [UserProfileController::class,'roleAssign'])->name('profile.roleAssign');
+    Route::post('profile/revoke', [UserProfileController::class,'roleRevoke'])->name('profile.roleRevoke');
+    Route::get('permissions/filter',[PermissionsController::class,'filter'])->name('permissions.filter');
 });

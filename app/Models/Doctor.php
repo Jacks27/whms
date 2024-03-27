@@ -16,6 +16,7 @@ class Doctor extends Model
     use Notifiable;
     use HasRoles;
     use HasFactory;
+
     protected $fillable = [
         'prof_id',
         'dep_id',
@@ -26,21 +27,13 @@ class Doctor extends Model
     ];
     protected $table = 'doctors';
 
+    public function doctor()
+    {
+        return $this->belongsTo(User::class);
+    }
     public function department()
     {
         return $this->belongsTo(DepartmentModel::class, 'dep_id');
-    }
-
-    public function profile(){
-        return $this->belongsTo(UserProfile::class, 'prof_id');
-    }
-
-
-
-    public function users()
-    {
-        return $this->hasOne(User::class, 'user_id', 'id')
-            ->select('user.id', 'user.name as username', 'user_profiles.id as profile_id', 'user_profiles.phno');
     }
 
 

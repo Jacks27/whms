@@ -39,7 +39,7 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest');
+        $this->middleware(['guest', 'auth']);
     }
 
     /**
@@ -71,18 +71,19 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
         ]);
     }
-    public function edit(string $id)
+    public function edit($id)
     {
-        $users = User::select('id','first_name','last_name','email')
+        $users = User::select('id','name','email')
         ->find($id);
         $roles=$users->roles;
         $rolenames = Role::all()->pluck('name');
 
         return view('users.update', compact('users','roles', 'rolenames'));
     }
-    public function show(string $id)
+
+    public function show($id)
     {
-        $user = User::select('id','first_name','last_name','email')
+        $user = User::select('id','name','email')
         ->find($id);
         $roles=$user->roles;
         $rolenames = Role::all()->pluck('name');
@@ -120,12 +121,10 @@ class RegisterController extends Controller
     public function update(Request $request, user $user)
     {
         $request->validate([
-            'first_name' => 'required',
-            'last_name' => 'required',
+            'name' => 'required',
             'email' => 'required|unique:users|max:255',
         ]);
-        $user->first_name = $request->first_name;
-        $user->last_name = $request->last_name;
+        $user->name = $request->name;
         $user->email = $request->email;
 
         if(!$user->save()){
@@ -137,31 +136,7 @@ class RegisterController extends Controller
 
     }
     // create a function for updating the roles;
-    public function assignRole(rolerequest $request){
 
-        if($request->roles){
-            $user=User::find($request->id);
-            $user->assignRole($request->roles)->save();
-           return redirect()->route('user.show', $request->id)->with('success', 'Success, your user role has been assigned.');
-        }else{
-           return  redirect()->back('user.show', $request->id)->with('error', 'Sorry, there\'re a problem while updating user role.');
-        }
-
-    }
-    public function revokeRole(rolerequest $request){
-        if(!empty($request->roles)){
-            $user=User::find($request->id);
-
-            foreach($request->roles as $role){
-                $user->removeRole($role)->save();
-            }
-
-           return redirect()->route('user.show', $request->id)->with('success', 'Success, your user role has been updated.');
-        }else{
-           return  redirect()->back( 'user.show', $request->id)->with('error', 'Please select a role the remove');
-        }
-
-    }
     public function destroy(string $id)
     {
         $user=User::find($request->id);

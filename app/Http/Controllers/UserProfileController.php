@@ -7,6 +7,7 @@ use App\Models\UserProfile;
 use App\Models\appointment;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\rolerequest;
+use App\Models\User;
 
 
 class UserProfileController extends Controller
@@ -50,7 +51,7 @@ class UserProfileController extends Controller
         }
         public function create(){
 
-            return view('home');
+            return view('profile.index');
         }
         public function store(UserProfileRequest $request){
 
@@ -73,16 +74,43 @@ class UserProfileController extends Controller
         ]);
 
       if (!$user_profile) {
-        dd("created failed");
+
                 return redirect()->back()->with('error', 'Sorry, there a problem while creating Your Profile.');
             }
             return redirect()->route('home')->with('success', 'Success, you Profile have been created.');
 
         }
-        public function destroy(){
-            return view('user.profile');
+        public function destroy($id){
+            return view('doc.show');
         }
-        public function show(){
-            return view('user.profile');
+        public function show($id){
+            return view('doc.show');
+        }
+        // assign a role
+        public function roleAssign(rolerequest $request)
+        {
+            if ($request->role) {
+                $user = User::find($request->id);
+                $user->assignRole($request->role)->save();
+                return redirect()->route('doctor.show', $request->id)->with('success', 'Success, your user role has been assigned.');
+            } else {
+                return redirect()->route('doctor.show', $request->id)->with('error', 'Sorry, there\'s a problem while updating user role.');
+            }
+        }
+        // remove rights
+    public function roleRevoke(Request $request){
+            if(!empty($request->role)){
+                $user=User::find($request->id);
+
+                foreach($request->role as $rol){
+
+                    $user->removeRole($rol)->save();
+                }
+
+               return redirect()->route('doctor.show', $request->id)->with('success', 'Success, your user role has been updated.');
+            }else{
+               return  redirect()->back( 'doctor.show', $request->id)->with('error', 'Please select a role the remove');
+            }
+
         }
     }

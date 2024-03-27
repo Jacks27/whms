@@ -33,11 +33,9 @@
                             @yield('content-actions')
 
                         </div>
-                    </div>
+                    </div> --}}
 
         <main class="">
-            here
-
             @yield('content')
         </main>
     </div>

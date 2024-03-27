@@ -8,7 +8,7 @@
         <!-- Sidebar user (optional) -->
         <div class="user-panel mt-1 pb-1 mb- d-flex">
             <div class="image">
-                <img src="{{ asset(Auth::user()->profile->image) }}" class="img-prof" alt="Profile Image">
+                <img src="{{ Storage::url(Auth::user()->profile->image) }}" class="img-prof" alt="Profile Image">
             </div>
         </div>
         <a href="{{route('home')}}">
@@ -19,10 +19,22 @@
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <li class="nav-item has-treeview">
-                    <a href="{{route('home')}}" class="nav-link">
+                    <a href="{{route('booking.index')}}" class="nav-link">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                     <p class="text-small">Dashboard</p>
 
+                </li>
+                <li class="nav-item has-treeview">
+                    <a href="{{ route('role.index') }}" class="nav-link">
+                        <i class="fa-solid fa-building"></i>
+                        <p class="text-small">Admin</p>
+                    </a>
+                </li>
+                <li class="nav-item has-treeview">
+                    <a href="{{ route('permissions.index') }}" class="nav-link">
+                        <i class="fa-solid fa-user-check"></i>
+                        <p class="text-small">permissions</p>
+                    </a>
                 </li>
                 <li class="nav-item has-treeview">
                     <a href="{{ route('department.index') }}" class="nav-link">
@@ -33,7 +45,7 @@
                 <li class="nav-item has-treeview">
                     <a href="{{route('doctor.index')}}" class="nav-link">
                         <i class="nav-icon fas fa-user-md"></i>
-                        <p class="text-small">Doctor</p>
+                        <p class="text-small">Staff</p>
                     </a>
                 </
 

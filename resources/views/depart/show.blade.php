@@ -54,14 +54,15 @@
         @foreach ($doctors as $data)
         <tr>
             <td>{{ $loop->index + 1 }}</td>
-            <td>{{ $data->users->first()->username }}</td>
-            <td>{{ $data->users->first()->phno}}</td>
+
+            <td>{{ $data->username }}</td>
+            <td>{{ $data->phno}}</td>
             <td>{{ $data->qualification }}</td>
             <td>{{ $data->speciality }}</td>
             <td>{{ $data->experience }}</td>
             <td>
-                <a href="{{ route('doctor.edit', $data->id) }}" class="btn btn-primary"><i class="fa-solid fa-pen"></i></a>
-                <a href="{{ route('doctor.destroy', $data->id) }}" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
+                <a href="{{ route('doctor.edit', $data->docid) }}" class="btn btn-primary"><i class="fa-solid fa-pen"></i></a>
+                <a href="{{ route('doctor.destroy', $data->docid) }}" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
             </td>
         </tr>
         @endforeach

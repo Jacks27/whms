@@ -10,6 +10,13 @@ use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 class DoctorController extends Controller
 {
+    function __construct()
+    {
+         $this->middleware('role_or_permission:hdoc|cos|Super-Admin|doctor', ['only' => ['index','show']]);
+         $this->middleware('role_or_permission:Super-Admin|hdoc|doctor.create', ['only' => ['create','store']]);
+         $this->middleware('role_or_permission:Super-Admin|doctor.edit', ['only' => ['edit','update']]);
+         $this->middleware('role_or_permission:Super-Admin|doctor.delete', ['only' => ['destroy']]);
+    }
     public function index()
     {
         $docs = DB::table('doctors')
@@ -17,18 +24,14 @@ class DoctorController extends Controller
         ->leftJoin('users', 'user_profiles.user_id', '=', 'users.id')
         ->leftJoin('departments', 'doctors.dep_id', '=', 'departments.id')
         ->select(
-            'speciality',
-            'experience',
-            'qualification',
-            'status',
+            'doctors.speciality',
+            'doctors.experience',
+            'doctors.qualification',
+            'doctors.status',
             'departments.name as department',
             'doctors.id as docid',
             'user_profiles.id as profile_id',
-            'user_profiles.phno',
-            'user_profiles.address',
             'user_profiles.image',
-            'user_profiles.county',
-            'user_profiles.city',
             'users.id as user_id',
             'users.name as username'
         )->get();

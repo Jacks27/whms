@@ -23,7 +23,7 @@ class rolerequest extends FormRequest
     {
         return [
             'id' => 'required|max:255',
-            'roles' => 'required'
+            'role' => 'required'
         ];
     }
 }

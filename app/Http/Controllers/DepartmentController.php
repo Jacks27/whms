@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\DepartmentModel;
 use App\Models\Doctor;
-use App\Models\Users;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Requests\DepartmentRequest;
 use App\Http\Requests\DepartmentUpdateRequest;
@@ -16,6 +16,13 @@ class DepartmentController extends Controller
     /**
      * Display a listing of the resource.
      */
+    function __construct()
+    {
+         $this->middleware('role_or_permission:hdoc|cos|Super-Admin|department', ['only' => ['index','show']]);
+         $this->middleware('role_or_permission:Super-Admin|hdoc|department.create', ['only' => ['create','store']]);
+         $this->middleware('role_or_permission:Super-Admin|department.edit', ['only' => ['edit','update']]);
+         $this->middleware('role_or_permission:Super-Admin|department.delete', ['only' => ['destroy']]);
+    }
     public function index()
     {
         if (request()->wantsJson()) {
@@ -63,23 +70,33 @@ class DepartmentController extends Controller
     public function show($id)
     {
         // get doctor by department
+        $docs = Doctor::leftJoin('user_profiles', 'doctors.prof_id', '=', 'user_profiles.id')
+    ->leftJoin('users', 'user_profiles.user_id', '=', 'users.id')
+    ->leftJoin('departments', 'doctors.dep_id', '=', 'departments.id')
+    ->select(
+        'doctors.speciality',
+        'doctors.experience',
+        'doctors.qualification',
+        'doctors.status',
+        'departments.name as department',
+        'doctors.id as docid',
+        'user_profiles.id as profile_id',
+        'user_profiles.phno',
+        'users.id as user_id',
+        'users.name as username'
+    )
+    ->where('doctors.dep_id', $id)
+    ->get();
 
-        $doctors = Doctor::whereHas('department', function ($query) use ($id) {
-            $query->where('id', $id);
-
-        })->with('users')->get();
-        dd($doctors);
         $department = DepartmentModel::find($id);
-        $rolenames = Role::all()->pluck('name');
 
         if (request()->wantsJson()) {
             return response(
-                $doctors,
+                $doctors
             );
         }
         // This code retrieves all doctors associated with the given department ID ($departmentModel->id) and eager loads the users relationship for each doctor
-
-        return view('depart.show')->with('doctors', $doctors)->with('department', $department)->with('roles', $rolenames);
+        return view('depart.show')->with('doctors', $docs)->with('department', $department);
     }
 
     /**
