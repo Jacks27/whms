@@ -92,7 +92,7 @@ class DepartmentController extends Controller
 
         if (request()->wantsJson()) {
             return response(
-                $doctors
+                $docs
             );
         }
         // This code retrieves all doctors associated with the given department ID ($departmentModel->id) and eager loads the users relationship for each doctor

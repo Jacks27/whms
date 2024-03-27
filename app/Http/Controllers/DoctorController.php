@@ -24,14 +24,18 @@ class DoctorController extends Controller
         ->leftJoin('users', 'user_profiles.user_id', '=', 'users.id')
         ->leftJoin('departments', 'doctors.dep_id', '=', 'departments.id')
         ->select(
-            'doctors.speciality',
-            'doctors.experience',
-            'doctors.qualification',
-            'doctors.status',
+            'speciality',
+            'experience',
+            'qualification',
+            'status',
             'departments.name as department',
             'doctors.id as docid',
             'user_profiles.id as profile_id',
+            'user_profiles.phno',
+            'user_profiles.address',
             'user_profiles.image',
+            'user_profiles.county',
+            'user_profiles.city',
             'users.id as user_id',
             'users.name as username'
         )->get();

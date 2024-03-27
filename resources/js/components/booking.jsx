@@ -34,6 +34,7 @@ class Booking extends Component {
                 // Fetch the data for the record being updated
                 const id = window.location.pathname.split('/').pop();
                 const response = await axios.get(`/whms/booking/${id}/edit`);
+                console.log('data ', response.data)
                 const { date, doctor_id, time, description, payment_mode } = response.data[0];
 
                 this.setState({ updateId: response.data.id, doctor_id: response.data.doctor_id,
@@ -53,6 +54,7 @@ class Booking extends Component {
     loadChange = async (selectedValue) => {
         try {
             const response = await axios.get(`/whms/department/${selectedValue}`);
+            console.log('data is', response.data)
             this.setState({ docdata: response.data });
         } catch (error) {
             console.error('Error fetching department data:', error);
@@ -149,7 +151,7 @@ class Booking extends Component {
                             onChange={this.handleChange}>
                             <option value="">Select Doctor</option>
                             {this.state.docdata.map(element => (
-                                <option key={element.id} value={element.id}>{element.users[0]?.username}</option>
+                                <option key={element.id} value={element.docid}>{element?.username}</option>
                             ))}
                         </select>
                         <div className='text-danger'><strong> {this.state.errors.errors?.doctor_id}</strong> </div>
