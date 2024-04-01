@@ -8,6 +8,7 @@ use App\Models\appointment;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\rolerequest;
 use App\Models\User;
+use App\Models\notification;
 
 
 class UserProfileController extends Controller
@@ -30,9 +31,16 @@ class UserProfileController extends Controller
                 'users.email',
                 'users.created_at'
             )->where('users.id', $request->user()->id)->get(); // Assuming user_id is the foreign key linking to
-            $userAppointments = appointment::where('patient_id', $request->user()->id)->get();
 
-
+            $userAppointments = DB::table('appointments')
+            ->select(
+                'appointments.id as id',
+                'appointments.description as pdescp',
+                'appointments.confirmation',
+                'appointments.payment_mode',
+                'appointments.time',
+                'appointments.confirmation',
+            )->where('appointments.patient_id', $request->user()->id)->get();
             return view('home')->with('userprofile', $userprofile)->with('userAppointments', $userAppointments);
 
     }
@@ -51,12 +59,13 @@ class UserProfileController extends Controller
         }
         public function create(){
 
-            return view('profile.index');
+            return view('home.index');
         }
         public function store(UserProfileRequest $request){
 
         $image_path = '';
         $user_profile = $request->user()->id;
+
 
         if ($request->hasFile('image')) {
             $image_path = $request->file('image')->store('profile', 'public');

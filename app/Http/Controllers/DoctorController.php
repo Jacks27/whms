@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\DepartmentModel;
 use App\Models\Doctor;
 use App\Models\User;
+use App\Models\appointment;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 class DoctorController extends Controller
@@ -14,8 +15,8 @@ class DoctorController extends Controller
     {
          $this->middleware('role_or_permission:hdoc|cos|Super-Admin|doctor', ['only' => ['index','show']]);
          $this->middleware('role_or_permission:Super-Admin|hdoc|doctor.create', ['only' => ['create','store']]);
-         $this->middleware('role_or_permission:Super-Admin|doctor.edit', ['only' => ['edit','update']]);
-         $this->middleware('role_or_permission:Super-Admin|doctor.delete', ['only' => ['destroy']]);
+         $this->middleware('role_or_permission:Super-Admin|doctor', ['only' => ['edit','update']]);
+         $this->middleware('role_or_permission:Super-Admin', ['only' => ['destroy']]);
     }
     public function index()
     {
@@ -39,9 +40,47 @@ class DoctorController extends Controller
             'users.id as user_id',
             'users.name as username'
         )->get();
-
-
         return view('doc.index')->with('docs', $docs);
+    }
+    public function dashboard(Request $request){
+
+        $userProfile = DB::table('user_profiles')
+            ->leftJoin('users', 'user_profiles.user_id', '=', 'users.id')
+            ->leftJoin('doctors', 'user_profiles.id', '=', 'doctors.prof_id')
+            ->select(
+                'doctors.id',
+                'doctors.status',
+                'users.name as username',
+                'users.created_at'
+            )->where('users.id', $request->user()->id)->get();
+        $A_records= appointment::where('confirmation','=',1)->count();
+        $I_records= appointment::where('confirmation','=',0)->count();
+        $users=User::count();
+
+
+        $appointments = DB::table('appointments')
+        ->leftJoin('users', 'appointments.patient_id', '=', 'users.id')
+        ->leftJoin('user_profiles', 'users.id', '=', 'user_profiles.user_id')
+        ->select(
+        'appointments.id as appointment_id',
+        'appointments.date',
+        'appointments.time',
+        'appointments.payment_mode',
+        'appointments.status',
+        'appointments.description',
+        'appointments.confirmation',
+        'users.name as patient_name',
+        'user_profiles.dob as patient_date_of_birth',
+        'user_profiles.gender as patient_gender',
+        'user_profiles.blg as patient_blood_group',
+        'user_profiles.county as patient_county',
+        'user_profiles.city as patient_city'
+        )
+
+    ->where('appointments.doctor_id', $userProfile[0]->id )
+    ->paginate(10);
+        return view('doc.dashboard', compact('appointments','A_records','I_records', 'users'));
+
     }
     public function create()
     {

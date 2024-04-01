@@ -17,11 +17,11 @@
                         <th>SL</th>
                         <th>Department Name</th>
                         <th>Doctor</th>
-                        <th>Speciality</th>
                         <th>Appointment Time</th>
-                        <th>Appointment Date</th>
-                        <th>Payment (Kshs)</th>
+                        <th>Message</th>
                         <th>Status</th>
+                        <th>Payment (Kshs)</th>
+                        <th>Done</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -31,11 +31,20 @@
                             <td>{{ $loop->index + 1 }}</td>
                             <td>{{ $data->department }}</td>
                             <td>{{ $data->username }}</td>
-                            <td>{{ $data->speciality }}</td>
                             <td>{{ $data->time }}</td>
-                            <td>{{ $data->date }}</td>
-                            <td>{{ $data->fee }}</td>
-                            <td>{{ $data->status }}</td>
+                            <td>{{ $data->message }}</td>
+                            <td class="
+                            @if($data->nstatus== 'pedding') bg-primary @endif
+                            @if($data->nstatus=='rejected') bg-warning @endif
+                            @if($data->nstatus=='accepted') bg-success @endif
+                            @if($data->nstatus==null) bg-info @endif
+                                ">@if($data->nstatus== null) Action Pedding @else {{$data->nstatus}} @endif</td>
+                            <td> @if ($data->fee >=0)
+                                pendding
+                            @else
+                                paid
+                            @endif</td>
+                            <td>  @if($data->status==0) Not Started @else Completed @endif</td>
                             <td>
                                 <a href="{{ route('booking.edit', $data->id) }}" class="btn btn-primary"><i class="fa-solid fa-pen"></i></a>
                                 <a href="{{ route('booking.show', $data->id) }}" class="btn btn-info"><i class="fa-solid fa-eye"></i></a>

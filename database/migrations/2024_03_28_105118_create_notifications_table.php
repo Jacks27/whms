@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('schedules', function (Blueprint $table) {
+        Schema::create('notifications', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('bk_id');
             $table->foreignId('doctor_id');
-            $table->foreignId('appointment_id');
-            $table->text('report');
-            $table->text('prescription');
-            $table->foreign('doctor_id')->references('id')->on('doctors')->onDelete('cascade');
-            $table->foreign('appointment_id')->references('id')->on('appointments')->onDelete('cascade');
+            $table->text('description');
+            $table->string('status');
+            $table->foreign('bk_id')->references('id')->on('appointments')->onDelete('cascade');
+            $table->foreign('doctor_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('scheduleds');
+        Schema::dropIfExists('notifications');
     }
 };

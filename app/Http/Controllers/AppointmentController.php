@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\appointment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;//change the date format
+use App\Models\notification;
 
 class AppointmentController extends Controller
 {
@@ -13,33 +15,36 @@ class AppointmentController extends Controller
      */
     public function index(Request $request)
     {
-        $query = DB::table('appointments')
-            ->leftJoin('doctors', 'appointments.doctor_id', '=', 'doctors.id')
-            ->leftJoin('user_profiles', 'doctors.prof_id', '=', 'user_profiles.id')
-            ->leftJoin('users', 'user_profiles.user_id', '=', 'users.id')
-            ->leftJoin('departments', 'doctors.dep_id', '=', 'departments.id')
-            ->select(
-                'appointments.id',
-                'appointments.date',
-                'appointments.time',
-                'appointments.status',
-                'appointments.description',
-                'appointments.payment_mode',
-                'doctors.id as doctor_id',
-                'doctors.speciality',
-                'user_profiles.id as user_id',
-                'user_profiles.phno',
-                'user_profiles.image',
-                'departments.fee as fee',
-                'departments.name as department',
-                'users.name as username'
-            );
-            if ($request->has('search')) {
-                $query->where('appointments.id', 'like', '%' . $request->search . '%');
-            }
+        $query = DB::table('appointments as a')
+    ->leftJoin('doctors as d', 'a.doctor_id', '=', 'd.id')
+    ->leftJoin('user_profiles as up', 'd.prof_id', '=', 'up.id')
+    ->leftJoin('users as u', 'up.user_id', '=', 'u.id')
+    ->leftJoin('departments as dep', 'd.dep_id', '=', 'dep.id')
+    ->leftJoin('notifications as n', 'a.id', '=', 'n.bk_id')
+    ->select(
+        'a.id',
+        'a.date',
+        'a.time',
+        'a.status',
+        'a.description',
+        'a.payment_mode',
+        'd.id as doctor_id',
+        'd.speciality',
+        'up.id as user_id',
+        'up.phno',
+        'up.image',
+        'dep.fee',
+        'dep.name as department',
+        'n.status as nstatus',
+        'n.description as message',
+        'u.name as username'
+    );
 
-            $appointments = $query->get();
+if ($request->has('search')) {
+    $query->where('a.id', 'like', '%' . $request->search . '%');
+}
 
+$appointments = $query->distinct()->get();
             if ($request->wantsJson()) {
                 return response($appointments);
             }
@@ -58,7 +63,7 @@ class AppointmentController extends Controller
         ->leftJoin('users', 'user_profiles.user_id', '=', 'users.id')
         ->leftJoin('departments', 'doctors.dep_id', '=', 'departments.id')
         ->select(
-            'appointments.id',
+            'appointments.id ass',
             'appointments.date',
             'appointments.time',
             'appointments.status',
@@ -105,14 +110,15 @@ class AppointmentController extends Controller
             'time' => 'required'
 
         ]);
-
+        $time = Carbon::createFromFormat('Y-m-d H:i:s', $request->time);
+        $formattedDate = $time->format('Y F d H:i');
         $appointment = new appointment();
         $appointment->patient_id = auth()->user()->id;
         $appointment->doctor_id = $request->doctor_id;
         $appointment->payment_mode = $request->payment_mode;
         $appointment->description = $request->description;
         $appointment->date = $request->date;
-        $appointment->time = $request->time;
+        $appointment->time = $formattedDate;
         $appointment->confirmation = 0;
         $appointment->status = 0;
         $appointment->save();
@@ -129,9 +135,12 @@ class AppointmentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(appointment $appointment)
+    public function show($id)
     {
-        //
+        $appointment = appointment::find($id);
+        $comments= notification::where('bk_id','=', $id)->paginate(10);
+        return  view('booking.show', compact('appointment', 'comments'));
+
     }
 
     /**

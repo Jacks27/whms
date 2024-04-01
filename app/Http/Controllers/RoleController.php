@@ -18,8 +18,8 @@ class RoleController extends Controller
      */
     function __construct()
 
-    {
-        $this->middleware(['role_or_permission:Super-Admin|role_list|role_create|role_edit|role_delete']);
+     {
+         $this->middleware(['role_or_permission:Super-Admin|role_list|role_create|role_edit|role_delete']);
 
         //  $this->middleware('permission:role_list|role_create|role_edit|role_delete', ['only' => ['index','store']]);
         //  $this->middleware('permission:role_create', ['only' => ['create','store']]);

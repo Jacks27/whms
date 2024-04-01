@@ -42,18 +42,21 @@ class userseeder extends Seeder
         $user = \App\Models\User::factory()->create([
             'name' => 'admindoctor',
             'email' => 'doc@whms.com',
+            'password'=>bcrypt('jiji@1234!')
         ]);
         $user->assignRole($role1);
 
         $user = \App\Models\User::factory()->create([
             'name' => 'Admin',
             'email' => 'admin@whms.com',
+            'password'=>bcrypt('jiji@1234!')
         ]);
         $user->assignRole($role2);
 
         $user = \App\Models\User::factory()->create([
             'name' => 'sudo',
             'email' => 'superadmin@whms.com',
+            'password'=>bcrypt('jiji@1234!')
         ]);
         $user->assignRole($role3);
     }

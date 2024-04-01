@@ -14,7 +14,19 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarNav">
+            @auth
             <ul class="navbar-nav ms-lg-5 me-lg-auto">
+                <li class="nav-item">
+                    <a class="nav-link click-scroll" href="/whms/profile/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link click-scroll" href="/whms/department">Department</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link click-scroll" href="/whms/doctor/dashboard">Dashboard</a>
+                </li>
+                @else
+                <ul class="navbar-nav ms-lg-5 me-lg-auto">
                 <li class="nav-item">
                     <a class="nav-link click-scroll" href="#section_1">Home</a>
                 </li>
@@ -44,6 +56,7 @@
                         <li><a class="dropdown-item" href="contact.html">Contact Form</a></li>
                     </ul>
                 </li>
+                @endauth
             </ul>
 
             <div class="d-none d-lg-block">

@@ -18,8 +18,7 @@ class DepartmentController extends Controller
      */
     function __construct()
     {
-         $this->middleware('role_or_permission:hdoc|cos|Super-Admin|department', ['only' => ['index','show']]);
-         $this->middleware('role_or_permission:Super-Admin|hdoc|department.create', ['only' => ['create','store']]);
+
          $this->middleware('role_or_permission:Super-Admin|department.edit', ['only' => ['edit','update']]);
          $this->middleware('role_or_permission:Super-Admin|department.delete', ['only' => ['destroy']]);
     }

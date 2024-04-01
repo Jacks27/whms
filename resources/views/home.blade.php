@@ -138,7 +138,8 @@
                                         <tr>
                                             <td>SL</td>
                                             <td>Date</td>
-                                            <td>Description</td>
+                                            <td colspan="2">Description</td>
+
                                             <td>Action</td>
                                         </tr>
                                     </thead>
@@ -147,9 +148,12 @@
                                         @foreach ($userAppointments as $appointment)
                                             <tr>
                                                 <td>{{ $loop->index + 1 }}</td>
-                                                <td>{{ $appointment->date }}</td>
-                                                <td>{{ $appointment->description }}</td>
-                                                <td><a href="{{ route('booking.edit', $appointment->id) }}">Edit</a></td>
+                                                <td>{{ $appointment->time }}</td>
+                                                <td>{{ $appointment->pdescp }}</td>
+                                                <td class="{{ $appointment->confirmation == 1 ? 'bg-success' : 'bg-info' }}">
+
+                                                </td>
+                                                <td><a href="{{ route('booking.show', $appointment->id) }}">Comment</a></td>
                                             </tr>
                                         @endforeach
                                         @endif
