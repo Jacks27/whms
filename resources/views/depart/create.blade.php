@@ -1,12 +1,11 @@
 @extends('layouts.admin')
-@extends('layouts.sidebar')
 @section('title', 'Department ')
 @section('content-header', 'Department Create')
-@section('content-actions')
-<a href="{{route('department.index')}}" class="btn btn-primary">Home</a>
-@endsection
+
 @section('content')
+<div class="container"> <a href="{{route('department.index')}}" class="btn btn-primary">Home</a> </div>
 <div class='card m-auto col-sm-12 col-lg-6 mt-2 shadow p-2'>
+
     <div class="card-header text-center">
         <h4>Department Create </h4>
     </div>

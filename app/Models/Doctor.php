@@ -28,29 +28,50 @@ class Doctor extends Model
 
     protected $table = 'doctors';
 
-    public function scopeWithAppointment($query)
-    {
-        // get user appointments
-        // select from appointment where doctor id is join department
-        //select I want patient details and appointment where doctor id is
-        //
-        return $query
-        ->leftJoin('user_profiles', 'user_profiles.user_id', '=', 'users.id')
-->leftJoin('doctors', 'user_profiles.id', '=', 'doctors.prof_id')
-->leftJoin('appointments', 'doctors.id', '=', 'appointments.doctor_id')
-->select(
-    'appointments.time',
-    'appointments.patient_id as patient_id',
-    'appointments.description',
-    'appointments.id as appointment_id',
-    'appointments.status',
-    'appointments.confirmation',
-    'user_profiles.phno as phone_number',
-    'user_profiles.blg as blood_group',
-    'user_profiles.address',
-    'user_profiles.gender',
-    'users.name as patient_name'
-);
+        public function scopeWithAppointment($id, $includeUserProfile = true)
+{
+    $query = DB::table('appointments')
+        ->leftJoin('users', 'appointments.patient_id', '=', 'users.id')
+        ->select(
+            'appointments.id as appointment_id',
+            'appointments.date',
+            'appointments.time',
+            'appointments.payment_mode',
+            'appointments.status',
+            'appointments.description',
+            'appointments.confirmation',
+            'appointments.updated_at'
+        )
+        ->where('appointments.doctor_id', $id);
+
+    if ($includeUserProfile) {
+        $query->leftJoin('user_profiles', 'users.id', '=', 'user_profiles.user_id')
+            ->selectRaw(
+                'users.name as patient_name,
+                user_profiles.dob as patient_date_of_birth,
+                user_profiles.gender as patient_gender,
+                user_profiles.blg as patient_blood_group,
+                user_profiles.county as patient_county,
+                user_profiles.city as patient_city'
+            );
+    }
+
+    return $query->paginate(10);
 }
 
+public function get_confirmed_doctor_appoinrments($id, $bool){
+// get appointment join doctor table
+//
+}
+public function get_doctor($id){
+    $userProfile = DB::table('user_profiles')
+    ->leftJoin('users', 'user_profiles.user_id', '=', 'users.id')
+    ->leftJoin('doctors', 'user_profiles.id', '=', 'doctors.prof_id')
+    ->select(
+        'doctors.id',
+        'doctors.status',
+        'users.name as username',
+        'users.created_at'
+    )->where('users.id', $id)->first();
+}
 }

@@ -1,5 +1,4 @@
 @extends('layouts.admin')
-@extends('layouts.sidebar')
 @section('title', 'Department ')
 @section('content-header', 'Department Show')
 @section('content-actions')

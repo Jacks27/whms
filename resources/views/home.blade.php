@@ -11,7 +11,14 @@
                                 <h4>Profile</h4>
                             </div>
                             <div class="card-body">
+                                @if(count(Auth::user()->getRoleNames()) < 0)
+                                true
+                                @else
+                                    false
+                                @endif
+
                                 @foreach ($userprofile as $data)
+
                                     <div class="row">
                                         <div class="col-6">
                                             <img src="{{ Storage::url($data->image) }}" alt="profile" class="img-prof" />
@@ -178,7 +185,7 @@
                                         <a href="{{ route('booking.create') }}" class="btn btn-primary">Appointments <span class="badge badge-light">4</span></a>
                                     </li>
                                     <li class="list-group-item">
-                                        <a href="{{ route('profile.index') }}" class="btn btn-primary">Profile <span class="badge badge-light">4</span></a>
+                                        <a href="{{ route('profile.index') }}" class="btn btn-primary">Check availability <span class="badge badge-light">4</span></a>
                                     </li>
                                 </ul>
                             </div>

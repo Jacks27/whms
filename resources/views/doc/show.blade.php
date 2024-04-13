@@ -1,5 +1,4 @@
 @extends('layouts.admin')
-@extends('layouts.sidebar')
 @section('title', 'Doctor ')
 @section('content-header', 'User Rights and Roles')
 @section('content-actions')
@@ -7,8 +6,11 @@
 @endsection
 @section('content')
 <div class="content-wrapper">
+    @if(count(Auth::user()->getRoleNames()) > 0  && Auth::user()->getRoleNames()[0]== 'Super-Admin')
     <div class="row">
+
         <div class="col-sm-12 col-lg-6 ">
+
     <table class="table table-bordered table-responsive">
         <thead>
             <tr>
@@ -69,6 +71,8 @@
         </tbody>
     </table>
 </div>
+
+
 <div class="col-sm-12 col-lg-6 ">
 
     <div class="col-sm-12 col-lg-12 m-auto card">
@@ -89,6 +93,32 @@
 </div>
 </div>
 </div>
+@endif
+
+<div class="table-responsive">
+
+    <table class="table">
+        <caption class="bg-white">Doctor {{$doc->name}} Email: {{$doc->email}} Number of appointments : {{count($doc_bk)}}</caption>
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Date</th>
+            <th scope="col">status</th>
+            <th scope="col">Confirmed</th>
+            <th scope="col">Create at</th>
+          </tr>
+        </thead>
+          @foreach ($doc_bk as $bk)
+          <tr>
+            <th scope="row">{{$loop->index+1}}</th>
+            <td>{{$bk->time}}</td>
+            <td>{{$bk->status}}</td>
+            <td class="bg-info">{{$bk->confirmation}}</td>
+            <td>{{$bk->updated_at}}</td>
+          </tr>
+          @endforeach
+    </table>
+  </div>
 </div>
 @endsection
 

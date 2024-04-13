@@ -110,6 +110,11 @@ class Booking extends Component {
         }
     }
 
+ checkDoctor = () => {
+    var doc_Id = document.getElementById('doctor').value;
+    window.open('http://127.0.0.1:8000/whms/doctor/' + doc_Id, '_blank');
+        };
+
     handleUpdate = (id) => {
         // Set the state to indicate we're updating and store the ID of the record
         this.setState({
@@ -123,9 +128,12 @@ class Booking extends Component {
     render() {
 
         return (
+
             <div>
             <div className='text-danger'> {this.state.errors.message} {this.state.errors.errors?.doctor_id}</div>
                 <form onSubmit={this.handleSubmit}>
+                <div className='row'>
+                    <div className='col-lg-6 col-sm-12'>
                 <div className="form-group">
                         <label htmlFor="date">Appoint </label>
                         <select
@@ -141,7 +149,10 @@ class Booking extends Component {
                             ))}
                         </select>
                     </div>
+                    </div>
+                    <div className='col-lg-6 col-sm-12'>
                     <div className="form-group">
+
                         <label htmlFor="Doctor">Doctor</label>
                         <select
                             className='form-control {{ this.state.errors.erros->has("doctor_id") ? " is-invalid" : ""}}'
@@ -157,6 +168,13 @@ class Booking extends Component {
                         <div className='text-danger'><strong> {this.state.errors.errors?.doctor_id}</strong> </div>
 
                     </div>
+                    </div>
+                    <div className='form-contro'><button className='btn btn-info' onClick={this.checkDoctor}>
+      Open in New Tab
+    </button>Check doctor</div>
+                    <div className='row'>
+
+                    <div className='col-lg-6 col-sm-12'>
                     <div className="form-group">
                         <label htmlFor="date">Date</label>
                         <input
@@ -169,8 +187,10 @@ class Booking extends Component {
                             onChange={this.handleChange}
                         />
                     </div>
-                   <div className='text-danger'><strong> {this.state.errors.errors?.date}</strong> </div>
 
+                   <div className='text-danger'><strong> {this.state.errors.errors?.date}</strong> </div>
+</div>
+                        <div className='col-sm-12 col-lg-6'>
                     <div className="form-group">
                         <label htmlFor="time">Time</label>
                         <input
@@ -186,7 +206,11 @@ class Booking extends Component {
                             required
                         />
                     </div>
+                    </div>
+
                     <div className='text-danger'><strong> {this.state.errors.errors?.time}</strong> </div>
+                    </div>
+
 
                     <div className="form-group">
                         <label htmlFor="message">Message</label>
@@ -200,7 +224,7 @@ class Booking extends Component {
                         />
                     </div>
                     <div className='text-danger'><strong> {this.state.errors.errors?.description}</strong> </div>
-
+                    </div>
                     <div className="form-group">
                         <label htmlFor="payment_mode">Payment Mode</label>
                         <select

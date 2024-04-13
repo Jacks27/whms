@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;//change the date format
 use App\Models\notification;
+use Illuminate\Support\Facades\Auth;
 
 class AppointmentController extends Controller
 {
@@ -15,6 +16,11 @@ class AppointmentController extends Controller
      */
     public function index(Request $request)
     {
+
+        if(count(Auth::user()->getRoleNames()) <=1){
+            abort(404);
+        }else{
+
         $query = DB::table('appointments as a')
     ->leftJoin('doctors as d', 'a.doctor_id', '=', 'd.id')
     ->leftJoin('user_profiles as up', 'd.prof_id', '=', 'up.id')
@@ -51,7 +57,7 @@ $appointments = $query->distinct()->get();
 
                 return view('booking.index', compact('appointments'));
     }
-
+    }
     /**
      * Show the form for creating a new resource.
      */

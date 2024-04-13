@@ -45,6 +45,7 @@
             <div class="card">
                 <div class="card-header">
                 Appointments
+                {{count(Auth::user()->getRoleNames())}}
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -54,6 +55,7 @@
 
                               <tr>
                                 <th scope="col">#</th>
+                                <th scope="col">Booked at</th>
                                 <th scope="col">Date</th>
                                 <th scope="col">Info</th>
                                 <th scope="col">Name</th>
@@ -70,6 +72,7 @@
                                 @foreach ($appointments as $appts)
                               <tr>
                                 <th scope="row">{{$loop->index+1}} </th>
+                                <td>{{$appts->updated_at}}</td>
                                 <td>{{$appts->time}}</td>
                                 <td>{{$appts->description}}</td>
                                 <td>{{$appts->patient_name}}</td>
@@ -99,7 +102,7 @@
                               @endforeach
                           </table>
                     </div>
-                    {{ $appointments->render() }}<a href="{{route('booking.index')}}" class="btn btn-primary">All bookings</a>
+                    {{ $appointments->links() }}<a href="{{route('booking.index')}}" class="btn btn-primary">All bookings</a>
                 </div>
               </div>
         </div>

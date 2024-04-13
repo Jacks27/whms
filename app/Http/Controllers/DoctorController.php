@@ -13,7 +13,7 @@ class DoctorController extends Controller
 {
     function __construct()
     {
-         $this->middleware('role_or_permission:hdoc|cos|Super-Admin|doctor', ['only' => ['index','show']]);
+        //  $this->middleware('role_or_permission:hdoc|cos|Super-Admin|doctor', ['only' => ['index','show']]);
          $this->middleware('role_or_permission:Super-Admin|hdoc|doctor.create', ['only' => ['create','store']]);
          $this->middleware('role_or_permission:Super-Admin|doctor', ['only' => ['edit','update']]);
          $this->middleware('role_or_permission:Super-Admin', ['only' => ['destroy']]);
@@ -53,33 +53,22 @@ class DoctorController extends Controller
                 'users.name as username',
                 'users.created_at'
             )->where('users.id', $request->user()->id)->get();
+
         $A_records= appointment::where('confirmation','=',1)->count();
         $I_records= appointment::where('confirmation','=',0)->count();
         $users=User::count();
-
-
-        $appointments = DB::table('appointments')
-        ->leftJoin('users', 'appointments.patient_id', '=', 'users.id')
-        ->leftJoin('user_profiles', 'users.id', '=', 'user_profiles.user_id')
-        ->select(
-        'appointments.id as appointment_id',
-        'appointments.date',
-        'appointments.time',
-        'appointments.payment_mode',
-        'appointments.status',
-        'appointments.description',
-        'appointments.confirmation',
-        'users.name as patient_name',
-        'user_profiles.dob as patient_date_of_birth',
-        'user_profiles.gender as patient_gender',
-        'user_profiles.blg as patient_blood_group',
-        'user_profiles.county as patient_county',
-        'user_profiles.city as patient_city'
-        )
-
-    ->where('appointments.doctor_id', $userProfile[0]->id )
-    ->paginate(10);
+        $doc=new Doctor();
+        if($userProfile[0]->id==null){
+            return redirect()->back()->withErrors('error','User is not a doctor');
+        }else{
+        $appointments=$doc->scopeWithAppointment($userProfile[0]->id);
+        }
         return view('doc.dashboard', compact('appointments','A_records','I_records', 'users'));
+
+    }
+    public function check_availablity($id){
+        // get doctor usng I and Join the appointment table
+        $appointments=$doc->scopeWithAppointment($id);
 
     }
     public function create()
@@ -125,14 +114,44 @@ class DoctorController extends Controller
         }
 
     }
-    public function show($id)
+
+    public function show(Request $request, $id)
     {
-        $doc = User::select('id', 'name', 'email')
-            ->where('id', $id)
+        $docs = DB::table('doctors')
+        ->leftJoin('user_profiles', 'doctors.prof_id', '=', 'user_profiles.id')
+        ->leftJoin('users', 'user_profiles.user_id', '=', 'users.id')
+        ->leftJoin('departments', 'doctors.dep_id', '=', 'departments.id')
+        ->select(
+            'doctors.speciality',
+            'doctors.experience',
+            'doctors.qualification',
+            'doctors.status',
+            'departments.name as department',
+            'doctors.id as doc_id',
+            'user_profiles.id as profile_id',
+            'user_profiles.phno',
+            'user_profiles.address',
+            'user_profiles.image',
+            'user_profiles.county',
+            'user_profiles.city',
+            'users.id as user_id',
+            'users.name as username'
+        )
+        ->where('doctors.id', $id)
+        ->first();
+
+         $doc = User::select('id', 'name', 'email')
+            ->where('id', $docs->user_id)
             ->first();
             $roles=$doc->getRoleNames();
             $rolenames = Role::all()->pluck('name');
-        return view('doc.show', compact('doc', 'roles', 'rolenames'));
+            $docprof= new Doctor();
+            $doc_bk= $docprof->scopeWithAppointment($id,false);
+            if($request->wantsJson()){
+                return $doc_bk;
+            }
+
+        return view('doc.show', compact('doc', 'roles', 'rolenames', 'doc_bk'));
     }
     public function edit($id)
     {
@@ -141,7 +160,6 @@ class DoctorController extends Controller
         $deprtmnt = $deprt->pluck('name', 'id');
         $departments = $deprtmnt->all();
         $doctor = Doctor::where('id', $id)->first();
-
 
         return view('doc.edit' )->with('departments', $departments)->with('doctor', $doctor);
     }

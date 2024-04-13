@@ -1,5 +1,4 @@
 @extends('layouts.admin')
-
 @section('title', 'Booking')
 @section('content-header', 'Booking List')
 @section('content-actions')

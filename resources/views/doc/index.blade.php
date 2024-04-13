@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@extends('layouts.sidebar')
+
 @section('title', 'Doctor ')
 @section('content-header', 'Department list')
 @section('content-actions')
@@ -7,6 +7,8 @@
 @endsection
 @section('content')
 <div class="content-wrapper">
+    <a href="{{route('doctor.create')}}" class="btn btn-primary m-2">New Admin</a>
+
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -31,7 +33,7 @@
                 <td>
                     <a href="{{route('doctor.edit', $doc->docid)}}" class="btn btn-primary"><i class="fa-solid fa-pen"></i></a>
                     <a href="{{route('doctor.edit', $doc->docid)}}" class="btn btn-primary"><i class="fa-solid fa-list-check"></i></a>
-                    <a href="{{route('doctor.show', $doc->user_id)}}" class="btn btn-primary"><i class="fa-regular fa-eye"></i></a>
+
 
                     <form action="{{route('doctor.destroy', $doc->docid)}}" method="POST">
                         @csrf
